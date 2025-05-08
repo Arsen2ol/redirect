@@ -54,11 +54,13 @@
           const country = data.country || "";
 
           const img = new Image();
-          img.src = `https://script.google.com/macros/s/AKfycbzjDHqonpUsn0IfUbwjbqHnO2XsNJOKea9T1qTF0XgmTdqVrolJmRTO1l7lcCfK3b64/exec?token=${encodeURIComponent(hash)}&ua=${encodeURIComponent(ua)}&bot=${isBot}&ip=${ip}&country=${country}`;
+          img.src = "https://script.google.com/macros/s/AKfycbwldYqs2TIGKnACW4iLq8DCj6ZLRL_jdTMQN6xlrK34ArJdZ5GjjYQ2ccKz4MLFT1jB/exec"
+                   + `?token=${encodeURIComponent(hash)}&ua=${encodeURIComponent(ua)}&bot=${isBot}&moved=${moved}&ip=${ip}&country=${country}`;
         })
         .catch(() => {
           const img = new Image();
-          img.src = `https://script.google.com/macros/s/AKfycbzjDHqonpUsn0IfUbwjbqHnO2XsNJOKea9T1qTF0XgmTdqVrolJmRTO1l7lcCfK3b64/exec?token=${encodeURIComponent(hash)}&ua=${encodeURIComponent(ua)}&bot=${isBot}`;
+          img.src = "https://script.google.com/macros/s/AKfycbwldYqs2TIGKnACW4iLq8DCj6ZLRL_jdTMQN6xlrK34ArJdZ5GjjYQ2ccKz4MLFT1jB/exec"
+                   + `?token=${encodeURIComponent(hash)}&ua=${encodeURIComponent(ua)}&bot=${isBot}&moved=${moved}`;
         });
 
       setTimeout(() => {
