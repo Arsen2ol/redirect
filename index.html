@@ -7,10 +7,13 @@
     window.addEventListener("load", function () {
       const hash = window.location.hash ? window.location.hash.substring(1) : null;
       const ua = navigator.userAgent || "";
-      const isBot = /bot|crawl|spider|slurp|headless|phantom|facebookexternalhit/i.test(ua);
+      const uaClean = ua.toLowerCase().replace(/\s+/g, '');
+      const isBot = uaClean.includes("bot") || uaClean.includes("crawl") || uaClean.includes("spider") || uaClean.includes("slurp") || uaClean.includes("headless") || uaClean.includes("phantom") || uaClean.includes("facebookexternalhit") || uaClean.includes("googlebot");
 
       console.log("🔍 HASH:", hash);
-      console.log("🕵️ UA:", ua);
+      console.log("🧾 UA:", ua);
+      console.log("🧾 UA Cleaned:", uaClean);
+      console.log("🧾 UA Length:", ua.length);
       console.log("🤖 Is Bot:", isBot);
 
       if (!hash) {
